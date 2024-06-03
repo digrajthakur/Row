@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Rows with Add/Remove and Filter by Deepanshu Thakur</title>
+  <style>
+    body{
+        background-color: rgb(255, 153, 0);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    table, th, td {
+      border: 1px solid black;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+    }
+    .btn {
+      margin: 5px;
+    }
+    .filter-input {
+      margin-bottom: 10px;
+      width: 100%;
+      padding: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Dynamic Rows with Add/Remove and Filter</h1>
+  <input type="text" id="filterInput" class="filter-input" placeholder="Filter rows..." onkeyup="filterRows()">
+  <input type="text" id="rowDataInput" placeholder="Enter row data" style="width: calc(100% - 130px); padding: 8px;">
+  <button class="btn" onclick="addRow()">+</button>
+  <button class="btn" onclick="removeRow()">-</button>
+  <table id="dataTable">
+    <thead>
+      <tr>
+        <th>Row Content</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+    
+    </tbody>
+  </table>
+
+  <script>
+    function addRow() {
+      const tableBody = document.getElementById('tableBody');
+      const rowData = document.getElementById('rowDataInput').value;
+
+      if (rowData.trim() === '') {
+        alert('Please enter row data');
+        return;
+      }
+
+      const row = document.createElement('tr');
+      const cell1 = document.createElement('td');
+      const cell2 = document.createElement('td');
+
+      cell1.textContent = rowData;
+      cell2.innerHTML = '<button onclick="removeSpecificRow(this)">Remove</button>';
+      row.appendChild(cell1);
+      row.appendChild(cell2);
+      tableBody.appendChild(row);
+
+      document.getElementById('rowDataInput').value = ''; 
+    }
+
+    function removeRow() {
+      const tableBody = document.getElementById('tableBody');
+      if (tableBody.rows.length > 0) {
+        tableBody.deleteRow(-1);
+      }
+    }
+
+    function removeSpecificRow(button) {
+      const row = button.parentNode.parentNode;
+      row.parentNode.removeChild(row);
+    }
+
+    function filterRows() {
+      const filterInput = document.getElementById('filterInput').value.toLowerCase();
+      const tableBody = document.getElementById('tableBody');
+      const rows = tableBody.getElementsByTagName('tr');
+
+      for (let i = 0; i < rows.length; i++) {
+        const cell = rows[i].getElementsByTagName('td')[0];
+        if (cell) {
+          const cellText = cell.textContent || cell.innerText;
+          rows[i].style.display = cellText.toLowerCase().indexOf(filterInput) > -1 ? '' : 'none';
+        }
+      }
+    }
+  </script>
+</body>
+</html>
+
+
